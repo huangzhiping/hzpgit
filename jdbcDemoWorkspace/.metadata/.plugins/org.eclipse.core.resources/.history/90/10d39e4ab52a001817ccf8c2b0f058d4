@@ -1,0 +1,6 @@
+package jdbc;
+
+import java.util.LinkedHashMap;
+
+public class ContentValues extends LinkedHashMap<String, String>{
+}

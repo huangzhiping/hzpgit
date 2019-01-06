@@ -1,0 +1,13 @@
+package jdbc;
+
+public class Demo {
+
+	public static void main(String[] args) {
+		JDBCImpl.getInstance().init("db_user");
+		
+		ContentValues values = new ContentValues();
+		
+		JDBCImpl.getInstance().insert(values);
+	}
+	
+}

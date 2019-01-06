@@ -1,0 +1,6 @@
+package jdbc;
+
+import java.util.HashMap;
+
+public class ContentValues extends HashMap<String, String>{
+}

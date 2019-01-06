@@ -1,0 +1,17 @@
+package jdbc;
+
+public class Demo {
+
+	public static void main(String[] args) {
+		JDBCImpl.getInstance().init("db_user");
+		
+		ContentValues values = new ContentValues();
+		values.put("sid", "S_1016");
+		values.put("sname", "huangzhiping");
+		values.put("age", "25");
+		values.put("gender", "male");
+		
+		JDBCImpl.getInstance().insert(values);
+	}
+	
+}

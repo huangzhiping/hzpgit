@@ -1,0 +1,112 @@
+package jdbc;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
+
+public class JDBCImpl {
+	
+	private static final String USER = "user";
+	private static final String PASSWORD = "password";
+	private static final String URL = "url";
+	
+	private Connection mConn = null ;
+	private String mDatabaseName = "";
+	
+	private static final JDBCImpl sInstance = new JDBCImpl() ;
+	
+	static {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch(Exception e) {
+			e.printStackTrace(); 
+		}
+	}
+	
+	private JDBCImpl() {}
+	
+	public static JDBCImpl getInstance() {
+		return sInstance ;
+	}
+	
+	public void init(String dbName) {
+		mDatabaseName = dbName; 
+		
+		Map<String, String> res = getConfig(); 
+		try {
+			mConn = DriverManager.getConnection(res.get(URL) + dbName ,
+										res.get(USER),
+										res.get(PASSWORD));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void close() {
+		try{
+			if(mConn != null) 
+				mConn.close() ;
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}
+	}
+	
+	public void insert(ContentValues values) {
+		StringBuilder sbKey = new StringBuilder() ;
+		StringBuilder sbValues = new StringBuilder() ;
+		
+		Set<Entry<String,String>> entrySet = values.entrySet();
+		Iterator<Entry<String, String>> iter = entrySet.iterator();
+		while(iter.hasNext()) {
+			Entry<String, String> entry = iter.next();
+			sbKey.append(entry.getKey());
+			sbValues.append(entry.getValue());
+		}
+		
+		StringBuilder sb = new StringBuilder() ;
+		sb.append("insert into ")
+			.append(mDatabaseName)
+			.append("(")
+			.append(" values(")
+			
+			.append(");") ;
+		
+
+
+			
+		String sql = sb.toString(); 
+	}
+	
+	private Map<String,String> getConfig() {
+		try{
+			String basePath = Thread
+								.currentThread()
+								.getContextClassLoader()
+								.getResource("")
+								.getPath();      //bin目录。
+			basePath = new File(basePath).getParent() ;
+			
+			Properties pro = new Properties();
+			pro.load(new FileInputStream(
+					new File(basePath,"/assets/config.properties")));
+			
+			HashMap<String, String> map = new HashMap<String, String>() ;
+
+			map.put(USER, pro.getProperty(USER));
+			map.put(PASSWORD, pro.getProperty(PASSWORD));
+			map.put(URL, pro.getProperty(URL));
+	
+			return map ;
+		} catch(Exception e) {
+			e.printStackTrace() ;
+		}
+		return null ;
+	}
+}
